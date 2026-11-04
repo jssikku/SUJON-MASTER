@@ -1,0 +1,50 @@
+name: Build SUJON MASTER APK
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Unzip project and build debug APK
+        run: |
+          ls -la
+          for f in *.zip; do echo "Unzipping $f"; unzip -o "$f" || true; done
+          ls -la
+          if [ -f sujon-master-android.zip ]; then unzip -o sujon-master-android.zip; fi
+          ls -la
+          if [ -f gradlew ]; then
+            echo "sdk.dir=$ANDROID_HOME" >> local.properties
+            chmod +x gradlew
+            ./gradlew assembleDebug --stacktrace
+          elif [ -f android/gradlew ]; then
+            cd android
+            echo "sdk.dir=$ANDROID_HOME" >> local.properties
+            chmod +x gradlew
+            ./gradlew assembleDebug --stacktrace
+          else
+            echo "gradlew not found"
+            ls -R | head -n 100
+            exit 1
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sujon-master-apk
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          
