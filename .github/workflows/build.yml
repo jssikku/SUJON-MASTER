@@ -53,5 +53,7 @@ jobs:
             android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
       - name: Show debug SHA-1
-        run: keytool -printcert -jarfile app/build/outputs/apk/debug/app-debug.apk | grep SHA1 || keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk | grep SHA1 || true
-        
+        run: |
+         ls -lh app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/app-debug.apk || true
+         keytool -printcert -jarfile app/build/outputs/apk/debug/app-debug.apk || keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk || true
+
