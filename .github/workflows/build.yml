@@ -54,6 +54,7 @@ jobs:
           if-no-files-found: error
       - name: Show debug SHA-1
         run: |
-         ls -lh app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/app-debug.apk || true
-         keytool -printcert -jarfile app/build/outputs/apk/debug/app-debug.apk || keytool -printcert -jarfile android/app/build/outputs/apk/debug/app-debug.apk || true
+         APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | head -n 1)
+         "$APKSIGNER" verify --print-certs app/build/outputs/apk/debug/app-debug.apk
+
 
