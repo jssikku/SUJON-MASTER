@@ -28,7 +28,9 @@ jobs:
           sed -i 's/AndroidHttp.newCompatibleTransport()/NetHttpTransport()/' app/src/main/java/com/worksledger/app/sync/GoogleDriveSyncManager.kt || true
           sed -i 's/import com.google.api.client.extensions.android.http.AndroidHttp/import com.google.api.client.http.javanet.NetHttpTransport/' android/app/src/main/java/com/worksledger/app/sync/GoogleDriveSyncManager.kt || true
           sed -i 's/AndroidHttp.newCompatibleTransport()/NetHttpTransport()/' android/app/src/main/java/com/worksledger/app/sync/GoogleDriveSyncManager.kt || true
-          
+          if [ -f debug.keystore ]; then mkdir -p ~/.android && cp debug.keystore ~/.android/debug.keystore; fi
+          if [ -f android/debug.keystore ]; then mkdir -p ~/.android && cp android/debug.keystore ~/.android/debug.keystore; fi
+
           if [ -f gradlew ]; then
             echo "sdk.dir=$ANDROID_HOME" >> local.properties
             chmod +x gradlew
